@@ -1,16 +1,18 @@
 package com.saintpress.javawiki.article;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Optional;
 
+@Slf4j
 @Controller
 public class ArticleController {
 
@@ -46,9 +48,21 @@ public class ArticleController {
     }
 
     @RequestMapping(value="/create/{title}")
-    public ModelAndView createArticle(@PathVariable("title") String title){
+    public ModelAndView createArticle(@PathVariable("title") String title, String content){
         ModelAndView mav = new ModelAndView("/article/create");
         return mav;
+    }
+
+    @RequestMapping(value="/insert/{title}", method=RequestMethod.POST)
+    public String insertArticle(@PathVariable("title") String title, ArticleEntity article){
+        Optional <ArticleEntity> opt =  articleService.findByTitle(title);
+        if (opt.isPresent()){
+            return "redirect:/edit/{title}";
+        } else {
+            article.setTitle(title);
+            articleService.createArticle(article);
+            return "redirect:/w/{title}";
+        }
     }
 
     @RequestMapping(value="/edit/{title}")

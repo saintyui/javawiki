@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 public interface ArticleRepo extends JpaRepository <ArticleEntity, Long> {
 
     ArticleEntity findByTitle(String title);
+
+    ArticleEntity save(ArticleEntity article);
 }
