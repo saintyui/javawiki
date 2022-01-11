@@ -22,4 +22,10 @@ public class ArticleService {
         article.setCreated_date(now);
         articleRepo.save(article);
     }
+
+    public void updateArticle(ArticleEntity article){
+        Date now = new Date();
+        article.setUpdated_date(now);
+        articleRepo.save(article);
+    }
 }

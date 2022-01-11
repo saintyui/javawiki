@@ -68,6 +68,27 @@ public class ArticleController {
     @RequestMapping(value="/edit/{title}")
     public ModelAndView editArticle(@PathVariable("title") String title){
         ModelAndView mav = new ModelAndView("/article/edit");
+
+        Optional <ArticleEntity> opt =  articleService.findByTitle(title);
+        if (opt.isPresent()){
+            ArticleEntity article = opt.orElse(null);
+            mav.addObject("article", article);
+        } else {
+            mav.setViewName("redirect:/article/redirect");
+        }
+
         return mav;
+    }
+
+    @RequestMapping(value="/update/{title}", method=RequestMethod.POST)
+    public String updateArticle(@PathVariable("title") String title, ArticleEntity article){
+        Optional <ArticleEntity> opt =  articleService.findByTitle(title);
+        if (opt.isPresent()){
+            article.setTitle(title);
+            articleService.updateArticle(article);
+            return "redirect:/w/{title}";
+        } else {
+            return "redirect:/create/{title}";
+        }
     }
 }
