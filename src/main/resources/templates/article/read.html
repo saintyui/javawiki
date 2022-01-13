@@ -13,8 +13,9 @@
     <div class="container">
         <h1 th:text="${article.title}">TITLE</h1>
         <p><a th:href="${'/edit/'+ article.title}">[편집]</a></p>
-        <p>작성 시간&nbsp<span th:text="${article.created_date}"></span></p>
-        <p th:text="${article.content}">Content</p>
+        <p>작성 시간&nbsp<span th:text="${article.created_date}"></span>
+           수정 시간&nbsp<span th:text="${article.updated_date}"></span></p>
+        <p th:utext="${article.content}">Content</p>
     </div>
 </body>
 </html>

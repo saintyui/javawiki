@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 @Slf4j
@@ -81,14 +82,18 @@ public class ArticleController {
     }
 
     @RequestMapping(value="/update/{title}", method=RequestMethod.POST)
-    public String updateArticle(@PathVariable("title") String title, ArticleEntity article){
+    public String updateArticle(@PathVariable("title") String title, @RequestParam HashMap map){
         Optional <ArticleEntity> opt =  articleService.findByTitle(title);
-        if (opt.isPresent()){
-            article.setTitle(title);
-            articleService.updateArticle(article);
-            return "redirect:/w/{title}";
-        } else {
-            return "redirect:/create/{title}";
-        }
+        if (opt.isPresent()) {
+                String content = (String) map.get("content");
+                System.out.println(content);
+                ArticleEntity ex_article = opt.orElse(null);
+                ex_article.setContent(content);
+                articleService.updateArticle(ex_article);
+                return "redirect:/w/{title}";
+            } else {
+                return "redirect:/create/{title}";
+            }
+
     }
 }
