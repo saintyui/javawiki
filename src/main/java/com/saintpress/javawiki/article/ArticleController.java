@@ -86,7 +86,6 @@ public class ArticleController {
         Optional <ArticleEntity> opt =  articleService.findByTitle(title);
         if (opt.isPresent()) {
                 String content = (String) map.get("content");
-                System.out.println(content);
                 ArticleEntity ex_article = opt.orElse(null);
                 ex_article.setContent(content);
                 articleService.updateArticle(ex_article);
