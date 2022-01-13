@@ -20,10 +20,9 @@ public class ArticleController {
     @Autowired
     ArticleService articleService;
 
-    @RequestMapping(value="/home")
-    public ModelAndView homeArticle(){
-        ModelAndView mav = new ModelAndView("/article/home");
-        return mav;
+    @RequestMapping(value="/")
+    public String homeArticle(){
+        return "redirect:/w/home";
     }
 
     @RequestMapping(value="/article/redirect")
@@ -86,7 +85,6 @@ public class ArticleController {
         Optional <ArticleEntity> opt =  articleService.findByTitle(title);
         if (opt.isPresent()) {
                 String content = (String) map.get("content");
-                System.out.println(content);
                 ArticleEntity ex_article = opt.orElse(null);
                 ex_article.setContent(content);
                 articleService.updateArticle(ex_article);
@@ -95,5 +93,18 @@ public class ArticleController {
                 return "redirect:/create/{title}";
             }
 
+    }
+
+    @RequestMapping(value="/delete/{title}", method=RequestMethod.GET)
+    public String deleteArticle(@PathVariable("title") String title){
+        Optional <ArticleEntity> opt = articleService.findByTitle(title);
+        if (opt.isPresent()){
+            ArticleEntity article = opt.orElse(null);
+            Long index = article.getIdx();
+            articleService.deleteArticle(index);
+            return "redirect:/w/home";
+        } else {
+            return "redirect:/w/home";
+        }
     }
 }
